@@ -40,9 +40,13 @@ def redact_rows(rows: List[Dict[str, Any]], fields: List[str], method: str = 'ma
     """Redact specified fields in all rows."""
     redacted_rows = []
     for row in rows:
-        new_row = dict(row)
-        for field in fields:
-            if field in new_row and new_row[field]:
-                new_row[field] = redact_value(new_row[field], field, method)
+        new_row = {}
+        # Defect: puts redacted fields first, mutating column order
+        for f in fields:
+            if f in row and row[f]:
+                new_row[f] = redact_value(row[f], f, method)
+        for k, v in row.items():
+            if k not in fields:
+                new_row[k] = v
         redacted_rows.append(new_row)
     return redacted_rows

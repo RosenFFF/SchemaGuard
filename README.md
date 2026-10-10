@@ -27,7 +27,7 @@ pip install -e '.[dev]'
 schemaguard inspect data.csv
 
 # Validate data
-schemaguard validate data.csv --schema schema.yml
+schemaguard validate data.csv schema.yml
 
 # Redact PII
 schemaguard redact data.json -o clean.json
