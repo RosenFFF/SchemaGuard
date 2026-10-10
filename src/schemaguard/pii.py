@@ -15,8 +15,7 @@ def detect_pii_fields(headers: List[str]) -> List[str]:
 def detect_pii_values(value: str) -> List[str]:
     """Detect PII patterns in values using regex."""
     detected = []
-    # SG-BUG-005: Too broad email regex
-    email_pattern = r'\S+@\S+'
+    email_pattern = r'[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+'
     if re.search(email_pattern, str(value)):
         detected.append('email')
         
@@ -41,14 +40,9 @@ def redact_rows(rows: List[Dict[str, Any]], fields: List[str], method: str = 'ma
     """Redact specified fields in all rows."""
     redacted_rows = []
     for row in rows:
-        new_row = {}
-        # SG-BUG-004: Redacted fields first, skipped if missing, scrambles column order
-        for f in fields:
-            if f in row:
-                new_row[f] = redact_value(row[f], f, method)
-                
-        for k, v in row.items():
-            if k not in fields:
-                new_row[k] = v
+        new_row = dict(row)
+        for field in fields:
+            if field in new_row and new_row[field]:
+                new_row[field] = redact_value(new_row[field], field, method)
         redacted_rows.append(new_row)
     return redacted_rows

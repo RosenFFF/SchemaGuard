@@ -35,8 +35,6 @@ def validate_types(rows: List[Dict[str, Any]], schema: Dict[str, Any]) -> List[D
                             "row": i, "field": field, "expected_type": "date_with_tz",
                             "actual_value": val, "message": "timezone is required"
                         })
-                    # SG-BUG-002: Ignore timezone offsets in comparisons by dropping tzinfo
-                    dt_naive = dt.replace(tzinfo=None)
                 except ValueError:
                     errors.append({"row": i, "field": field, "expected_type": "date", "actual_value": val})
                     
@@ -61,8 +59,7 @@ def check_duplicates(rows: List[Dict[str, Any]], schema: Dict[str, Any]) -> List
     
     for i, row in enumerate(rows):
         if dup_check_type == 'normalized':
-            # SG-BUG-003: Only strip whitespace, DO NOT normalize case.
-            norm_row = tuple((str(v).strip() if v is not None else "") for k, v in row.items())
+            norm_row = tuple((str(v).strip().lower() if v is not None else "") for k, v in row.items())
         else:
             norm_row = tuple((str(v) if v is not None else "") for k, v in row.items())
         

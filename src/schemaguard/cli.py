@@ -49,11 +49,10 @@ def validate_cmd(ctx, filepath: Path, schema_path: Path):
         
     result = validate(headers, rows, schema)
     
-    # SG-BUG-006: Missing fields error does not exit with code 1
     has_missing_fields = len(result.get("field_errors", [])) > 0
     if has_missing_fields:
         click.echo("Validation Error: Missing required fields found.")
-        # Intentionally not exiting with 1 here!
+        ctx.exit(1)
         
     has_other_errors = len(result.get("type_errors", [])) > 0
     if has_other_errors:

@@ -10,8 +10,7 @@ def read_csv(filepath: Path) -> Tuple[List[str], List[Dict[str, Any]]]:
     try:
         if filepath.exists() and filepath.stat().st_size == 0:
             raise FileReadError("File is empty")
-        # Intentional bug SG-BUG-001: no utf-8-sig, BOM is kept in the first header
-        with open(filepath, 'r', encoding='utf-8') as f:
+        with open(filepath, 'r', encoding='utf-8-sig') as f:
             reader = csv.DictReader(f)
             if reader.fieldnames is None:
                 return [], []
