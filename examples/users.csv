@@ -1,0 +1,6 @@
+id,name,email,phone,created_at
+1,Alice Johnson,alice@example.invalid,555-0101,2024-01-15
+2,Bob Smith,bob@example.invalid,555-0102,2024-02-20
+3,Carol White,carol@example.invalid,555-0103,2024-03-10
+4,Dave Brown,dave@example.invalid,555-0104,2024-04-05
+5,Eve Davis,eve@example.invalid,555-0105,2024-05-22
